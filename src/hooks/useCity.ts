@@ -7,11 +7,16 @@ type State = {
   cities: City[];
 };
 
-function reducer(state: State, action: any) {
+type Action = {
+  type: string;
+  payload: { keyword: string; cities: City[] };
+};
+
+function reducer(state: State, action: Action) {
   switch (action.type) {
     case "SET_SEARCH_KEYWORD":
       return { ...state, keyword: action.payload.keyword };
-    case "SET_SEARCH_RESULT":
+    case "SET_CITIES":
       return { ...state, cities: action.payload.cities };
     default:
       throw new Error("This action type is not supported");
@@ -32,16 +37,17 @@ export default function useCity() {
     })();
 
     return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.keyword]);
 
   const searchCity = (keyword: string) => {
     console.log(keyword);
-    dispatch({ type: "SET_SEARCH_KEYWORD", payload: { keyword } });
+    dispatch({ type: "SET_SEARCH_KEYWORD", payload: { keyword, cities: [] } });
   };
 
   const setSearchResult = async (keyword: string) => {
     const cities = await getCitiesByName(keyword);
-    dispatch({ type: "SET_SEARCH_RESULT", payload: { cities } });
+    dispatch({ type: "SET_CITIES", payload: { ...state, cities } });
   };
 
   return { searchCity, cities: state.cities };
