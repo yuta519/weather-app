@@ -1,5 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { City } from "@/types/City";
+import { WeatherResponse } from "@/infra/OpenWeather/types";
+import { Weather } from "@/types/Weather";
 
 const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_APIKEY as string;
 const url = "https://api.openweathermap.org";
@@ -25,37 +27,25 @@ export async function getCitiesByName(
   country: string = "",
   limit: number = 10
 ) {
-  // return await getRequest<City[]>(
   return await getRequest<City[]>(
     `${url}/geo/1.0/direct?q=${city},${country}&limit=${limit}&appid=${apiKey}`
   );
 }
 
-// public async getWeatherByLatAndLon(
-//   lat: number,
-//   lon: number
-// ): Promise<Weather> {
-//   const url = `${this.url}/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${this.apiKey}`;
-//   const response = await this.getRequest<WeatherResponse>(url);
-//   const weather: Weather = {
-//     name: response.name,
-//     main: response.weather[0].main,
-//     description: response.weather[0].main,
-//     icon: `https://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png`,
-//     temperature: {
-//       avg: response.main.temp,
-//       feelsLike: response.main.feels_like,
-//       min: response.main.temp_min,
-//       max: response.main.temp_max,
-//     },
-//     pressure: response.main.pressure,
-//     humidity: response.main.humidity,
-//   };
-//   return weather;
-// }
-
 export async function getHourlyWeatherForecast(lat: number, lon: number) {
-  return await getRequest<any[]>(
-    `${url}/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`
+  const response = await getRequest<WeatherResponse>(
+    `${url}/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`
   );
+  const result: Weather[] = response.list.map((weather) => ({
+    icon: weather.weather[0].icon,
+    temp: {
+      min: weather.main.temp_min,
+      max: weather.main.temp_max,
+    },
+    humidity: weather.main.humidity,
+    windSpeed: weather.wind.speed,
+    dt: weather.dt,
+    dt_txt: weather.dt_txt,
+  }));
+  return result;
 }
