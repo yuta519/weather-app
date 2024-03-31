@@ -37,7 +37,8 @@ export async function getHourlyWeatherForecast(lat: number, lon: number) {
     `${url}/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`
   );
   const result: Weather[] = response.list.map((weather) => ({
-    icon: weather.weather[0].icon,
+    name: weather.weather[0].main,
+    icon: `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`,
     temp: {
       min: weather.main.temp_min,
       max: weather.main.temp_max,
