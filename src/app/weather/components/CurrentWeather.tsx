@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { DropletIcon, WindIcon } from "@/app/weather/components/Icon";
+import { DropletIcon, SunIcon, WindIcon } from "@/app/weather/components/Icon";
 import { Weather } from "@/types/Weather";
 
 export default function CurrentWeather({ weather }: { weather: Weather }) {
@@ -30,6 +30,10 @@ export default function CurrentWeather({ weather }: { weather: Weather }) {
         <div className='flex items-center gap-1.5'>
           <WindIcon className='w-4 h-4 text-gray-500' />
           <p>Wind: {weather.windSpeed} mph</p>
+        </div>
+        <div className='flex items-center gap-1.5'>
+          <SunIcon className='w-4 h-4 text-gray-500' />
+          <p>Detail: {weather.description}</p>
         </div>
       </div>
     </section>
