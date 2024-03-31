@@ -1,5 +1,6 @@
 export type Weather = {
   name: WeatherName;
+  description: string;
   icon: string;
   temp: {
     min: number;
@@ -11,4 +12,4 @@ export type Weather = {
   dt_txt: string;
 };
 
-export type WeatherName = "Sunny" | "Rain" | "Snow" | "Clouds";
+export type WeatherName = "Sunny" | "Rain" | "Snow" | "Clouds" | "Clear";

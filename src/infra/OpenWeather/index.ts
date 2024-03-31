@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { City } from "@/types/City";
 import { WeatherResponse } from "@/infra/OpenWeather/types";
-import { Weather } from "@/types/Weather";
+import { Weather, WeatherName } from "@/types/Weather";
 
 const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_APIKEY as string;
 const url = "https://api.openweathermap.org";
@@ -37,7 +37,8 @@ export async function getHourlyWeatherForecast(lat: number, lon: number) {
     `${url}/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`
   );
   const result: Weather[] = response.list.map((weather) => ({
-    name: weather.weather[0].main,
+    name: weather.weather[0].main as WeatherName,
+    description: weather.weather[0].description,
     icon: `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`,
     temp: {
       min: weather.main.temp_min,
